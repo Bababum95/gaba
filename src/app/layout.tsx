@@ -34,15 +34,6 @@ export const metadata: Metadata = {
   description: "Browse and explore user profiles from DummyJSON",
 };
 
-const themeInitScript = `
-(function(){
-  try {
-    var t = localStorage.getItem('theme');
-    var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  } catch (e) {}
-})();`;
-
 export default function RootLayout({
   children,
 }: {
@@ -54,9 +45,6 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${fraunces.variable} ${interTight.variable} ${jetbrainsMono.variable}`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body>
         <ThemeProvider>
           <QueryProvider>

@@ -1,15 +1,10 @@
 "use client";
 
+import { useCallback, type ReactElement, type ReactNode } from "react";
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactElement,
-  type ReactNode,
-} from "react";
+  ThemeProvider as NextThemesProvider,
+  useTheme as useNextTheme,
+} from "next-themes";
 
 type Theme = "light" | "dark";
 
@@ -18,13 +13,15 @@ type ThemeContextValue = {
   toggleTheme: () => void;
 };
 
-const ThemeContext = createContext<ThemeContextValue>({
-  theme: "light",
-  toggleTheme: () => {},
-});
-
 export function useTheme(): ThemeContextValue {
-  return useContext(ThemeContext);
+  const { resolvedTheme, setTheme } = useNextTheme();
+  const theme: Theme = resolvedTheme === "dark" ? "dark" : "light";
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === "light" ? "dark" : "light");
+  }, [setTheme, theme]);
+
+  return { theme, toggleTheme };
 }
 
 type Props = {
@@ -32,39 +29,14 @@ type Props = {
 };
 
 export function ThemeProvider({ children }: Props): ReactElement {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === "undefined") {
-      return "light";
-    }
-
-    const saved = localStorage.getItem("theme");
-    if (saved === "light" || saved === "dark") {
-      return saved;
-    }
-
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === "light" ? "dark" : "light";
-      return next;
-    });
-  }, []);
-
-  const value = useMemo(
-    () => ({ theme, toggleTheme }),
-    [theme, toggleTheme],
-  );
-
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <NextThemesProvider
+      attribute="data-theme"
+      defaultTheme="system"
+      enableSystem
+      storageKey="theme"
+    >
+      {children}
+    </NextThemesProvider>
   );
 }

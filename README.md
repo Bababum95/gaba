@@ -27,7 +27,7 @@ pnpm dev
 
 Открыть: [http://localhost:3000](http://localhost:3000)
 
-Демо: [https://gaba-git-main-bababum95s-projects.vercel.app/](https://gaba-git-main-bababum95s-projects.vercel.app/)
+Демо: [https://gaba-azure.vercel.app/](https://gaba-azure.vercel.app/)
 
 ### Все скрипты
 
