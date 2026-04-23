@@ -137,7 +137,6 @@ export function FilterChips({
                   <button
                     key={v}
                     type="button"
-                    role="option"
                     onClick={() => {
                       onChange(def.key, v);
                       setOpenKey(null);
