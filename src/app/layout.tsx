@@ -55,10 +55,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${interTight.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        <script
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: themeInitScript }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         <ThemeProvider>

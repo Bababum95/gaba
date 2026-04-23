@@ -32,23 +32,29 @@ type Props = {
 };
 
 export function ThemeProvider({ children }: Props): ReactElement {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") {
+      return "light";
+    }
+
+    const saved = localStorage.getItem("theme");
+    if (saved === "light" || saved === "dark") {
+      return saved;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as Theme | null;
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    const initial = saved ?? (prefersDark ? "dark" : "light");
-    setTheme(initial);
-    document.documentElement.setAttribute("data-theme", initial);
-  }, []);
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => {
       const next = prev === "light" ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
       return next;
     });
   }, []);
