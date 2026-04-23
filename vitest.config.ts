@@ -8,6 +8,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     globals: true,
+    env: {
+      NEXT_PUBLIC_BASE_URL: "https://dummyjson.com",
+    },
   },
   resolve: {
     alias: {

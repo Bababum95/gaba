@@ -1,22 +1,20 @@
 import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 type ButtonVariant = "default" | "ghost" | "accent" | "outline";
 type ButtonSize = "sm" | "md" | "lg";
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
-  default:
-    "bg-[var(--bg-raised)] text-[var(--ink)] border border-[var(--hair)] hover:border-[var(--hair-strong)]",
-  ghost:
-    "bg-transparent text-[var(--ink-soft)] hover:text-[var(--ink)] hover:bg-[var(--accent-muted)]",
-  accent:
-    "bg-[var(--accent)] text-[var(--accent-ink)] hover:bg-[var(--accent-hover)]",
+  default: "bg-bg-raised text-ink border border-hair hover:border-hair-strong",
+  ghost: "bg-transparent text-ink-soft hover:text-ink hover:bg-accent-muted",
+  accent: "bg-accent text-accent-ink hover:bg-accent-hover",
   outline:
-    "bg-transparent border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent-muted)]",
+    "bg-transparent border border-accent text-accent hover:bg-accent-muted",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -25,7 +23,7 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: "px-5 py-2.5 text-base",
 };
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     { variant = "default", size = "md", className = "", children, ...props },
     ref,
@@ -33,14 +31,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={[
-          "inline-flex items-center gap-1.5 font-medium rounded-[var(--radius)] transition-colors duration-150",
-          "focus-visible:outline-2 focus-visible:outline-[var(--accent)] focus-visible:outline-offset-2",
+        className={cn(
+          "inline-flex items-center gap-1.5 font-medium rounded-(--radius) transition-colors duration-150",
+          "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2",
           "disabled:opacity-40 disabled:cursor-not-allowed",
           variantClasses[variant],
           sizeClasses[size],
           className,
-        ].join(" ")}
+        )}
         {...props}
       >
         {children}
@@ -49,5 +47,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 Button.displayName = "Button";
-
-export default Button;

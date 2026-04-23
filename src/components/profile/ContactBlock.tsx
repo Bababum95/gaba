@@ -1,33 +1,34 @@
 import type { User } from "@/lib/types";
 
-function Field({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div>
-      <dt className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-mute)] mb-0.5">
-        {label}
-      </dt>
-      <dd className={`text-sm text-[var(--ink-soft)] break-all ${mono ? "font-mono" : ""}`}>
-        {value}
-      </dd>
-    </div>
-  );
-}
+import { ProfileField } from "./ProfileField";
+import { ProfileSection } from "./ProfileSection";
 
-export default function ContactBlock({ user }: { user: User }) {
+type Props = {
+  user: User;
+};
+
+export function ContactBlock({ user }: Props) {
   return (
-    <section aria-labelledby="contact-heading">
-      <h2 id="contact-heading" className="font-display text-xl font-semibold text-[var(--ink)] mb-4">
-        Contact
-      </h2>
+    <ProfileSection title="Contact" headingId="contact-heading">
       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-        <Field label="Email" value={user.email} mono />
-        <Field label="Phone" value={user.phone} mono />
-        <Field label="IP address" value={user.ip} mono />
-        <Field label="MAC address" value={user.macAddress} mono />
+        <ProfileField label="Email" value={user.email} mono breakAll />
+        <ProfileField label="Phone" value={user.phone} mono breakAll />
+        <ProfileField
+          label="IP address"
+          value={user.ip ?? "—"}
+          mono
+          breakAll
+        />
+        <ProfileField
+          label="MAC address"
+          value={user.macAddress ?? "—"}
+          mono
+          breakAll
+        />
         <div className="sm:col-span-2">
-          <Field label="User agent" value={user.userAgent} mono />
+          <ProfileField label="User agent" value={user.userAgent} mono breakAll />
         </div>
       </dl>
-    </section>
+    </ProfileSection>
   );
 }

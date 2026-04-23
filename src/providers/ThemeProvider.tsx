@@ -5,7 +5,10 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
+  type ReactElement,
+  type ReactNode,
 } from "react";
 
 type Theme = "light" | "dark";
@@ -24,11 +27,11 @@ export function useTheme(): ThemeContextValue {
   return useContext(ThemeContext);
 }
 
-export default function ThemeProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+type Props = {
+  children: ReactNode;
+};
+
+export function ThemeProvider({ children }: Props): ReactElement {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
@@ -50,9 +53,12 @@ export default function ThemeProvider({
     });
   }, []);
 
+  const value = useMemo(
+    () => ({ theme, toggleTheme }),
+    [theme, toggleTheme],
+  );
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }

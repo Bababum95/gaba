@@ -1,38 +1,32 @@
-import type { User } from "@/lib/types";
 import { truncateWallet } from "@/lib/format";
+import type { User } from "@/lib/types";
 
-export default function CryptoBlock({ user }: { user: User }) {
-  const { crypto } = user;
+import { ProfileField } from "./ProfileField";
+import { ProfileSection } from "./ProfileSection";
+
+type Props = {
+  user: User;
+};
+
+export function CryptoBlock({ user }: Props) {
+  const crypto = user.crypto;
   return (
-    <section aria-labelledby="crypto-heading">
-      <h2 id="crypto-heading" className="font-display text-xl font-semibold text-[var(--ink)] mb-4">
-        Crypto
-      </h2>
-      <dl className="space-y-4">
-        <div>
-          <dt className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-mute)] mb-0.5">
-            Coin
-          </dt>
-          <dd className="text-sm text-[var(--ink-soft)]">{crypto.coin}</dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-mute)] mb-0.5">
-            Network
-          </dt>
-          <dd className="text-sm text-[var(--ink-soft)]">{crypto.network}</dd>
-        </div>
-        <div>
-          <dt className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-mute)] mb-0.5">
-            Wallet
-          </dt>
-          <dd
-            className="font-mono text-[11px] text-[var(--ink-soft)] break-all"
-            title={crypto.wallet}
-          >
-            {truncateWallet(crypto.wallet, 10)}
-          </dd>
-        </div>
-      </dl>
-    </section>
+    <ProfileSection title="Crypto" headingId="crypto-heading">
+      {!crypto ? (
+        <p className="text-sm text-ink-mute font-mono">No wallet on file.</p>
+      ) : (
+        <dl className="space-y-4">
+          <ProfileField label="Coin" value={crypto.coin} />
+          <ProfileField label="Network" value={crypto.network} />
+          <ProfileField
+            label="Wallet"
+            value={truncateWallet(crypto.wallet, 10)}
+            mono
+            breakAll
+            valueClassName="text-[11px]"
+          />
+        </dl>
+      )}
+    </ProfileSection>
   );
 }

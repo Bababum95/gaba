@@ -1,13 +1,11 @@
-import type { Metadata } from "next";
-import {
-  Fraunces,
-  Inter_Tight,
-  JetBrains_Mono,
-} from "next/font/google";
-import "./globals.css";
-import QueryProvider from "@/providers/QueryProvider";
-import ThemeProvider from "@/providers/ThemeProvider";
+import { Fraunces, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import type { Metadata } from "next";
+
+import { QueryProvider } from "@/providers/QueryProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+
+import "./globals.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -36,6 +34,15 @@ export const metadata: Metadata = {
   description: "Browse and explore user profiles from DummyJSON",
 };
 
+const themeInitScript = `
+(function(){
+  try {
+    var t = localStorage.getItem('theme');
+    var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  } catch (e) {}
+})();`;
+
 export default function RootLayout({
   children,
 }: {
@@ -47,6 +54,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${fraunces.variable} ${interTight.variable} ${jetbrainsMono.variable}`}
     >
+      <head>
+        <script
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
+      </head>
       <body>
         <ThemeProvider>
           <QueryProvider>

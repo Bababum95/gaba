@@ -4,6 +4,8 @@ export type StatsData = {
   total: number;
   maleCount: number;
   femaleCount: number;
+  /** maleCount + femaleCount; used for gender bar percentages */
+  genderKnown: number;
   avgAge: number;
   minAge: number;
   maxAge: number;
@@ -17,6 +19,7 @@ export function computeStats(users: User[]): StatsData {
       total: 0,
       maleCount: 0,
       femaleCount: 0,
+      genderKnown: 0,
       avgAge: 0,
       minAge: 0,
       maxAge: 0,
@@ -51,10 +54,13 @@ export function computeStats(users: User[]): StatsData {
     .map(([role, count]) => ({ role, count }))
     .sort((a, b) => b.count - a.count);
 
+  const genderKnown = maleCount + femaleCount;
+
   return {
     total: users.length,
     maleCount,
     femaleCount,
+    genderKnown,
     avgAge,
     minAge,
     maxAge,

@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import Button from "@/components/ui/Button";
-import Select from "@/components/ui/Select";
-import { PAGE_SIZE_OPTIONS } from "@/lib/constants";
+import { useState, type ReactElement, type SyntheticEvent } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
-type PaginationProps = {
+import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
+import { PAGE_SIZE_OPTIONS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+type Props = {
   page: number;
   limit: number;
   total: number;
@@ -13,20 +16,21 @@ type PaginationProps = {
   onLimitChange: (limit: number) => void;
 };
 
-export default function Pagination({
+export function Pagination({
   page,
   limit,
   total,
   onPageChange,
   onLimitChange,
-}: PaginationProps) {
-  const totalPages = Math.max(1, Math.ceil(total / limit));
-  const from = Math.min((page - 1) * limit + 1, total);
-  const to = Math.min(page * limit, total);
+}: Props): ReactElement {
+  const totalPages = total === 0 ? 0 : Math.ceil(total / limit);
+  const from = total === 0 ? 0 : Math.min((page - 1) * limit + 1, total);
+  const to = total === 0 ? 0 : Math.min(page * limit, total);
   const [jumpValue, setJumpValue] = useState("");
 
-  const handleJump = (e: React.FormEvent) => {
+  const handleJump = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (totalPages === 0) return;
     const n = parseInt(jumpValue, 10);
     if (!isNaN(n) && n >= 1 && n <= totalPages) {
       onPageChange(n);
@@ -34,13 +38,15 @@ export default function Pagination({
     }
   };
 
+  const pageLabel = totalPages === 0 ? `0 / 0` : `${page} / ${totalPages}`;
+
   return (
     <nav
       aria-label="Pagination"
-      className="flex items-center justify-between flex-wrap gap-4 px-6 py-4 border-t border-[var(--hair)]"
+      className="flex items-center justify-between flex-wrap gap-4 px-6 py-4 border-t border-hair"
     >
       <div className="flex items-center gap-3">
-        <span className="font-mono text-xs text-[var(--ink-mute)]">
+        <span className="font-mono text-xs text-ink-mute">
           {total === 0 ? "0" : `${from}–${to}`} of {total}
         </span>
         <Select
@@ -49,10 +55,7 @@ export default function Pagination({
             value: String(v),
             label: `${v} / page`,
           }))}
-          onChange={(e) => {
-            onLimitChange(Number(e.target.value));
-            onPageChange(1);
-          }}
+          onChange={(e) => onLimitChange(Number(e.target.value))}
           aria-label="Page size"
           className="text-xs py-1"
         />
@@ -62,45 +65,52 @@ export default function Pagination({
         <Button
           size="sm"
           variant="ghost"
-          disabled={page <= 1}
+          disabled={total === 0 || page <= 1}
           onClick={() => onPageChange(page - 1)}
           aria-label="Previous page"
         >
-          ← Prev
+          <ArrowLeftIcon size={16} />
         </Button>
 
-        <span className="font-mono text-xs text-[var(--ink-mute)] px-1">
-          {page} / {totalPages}
+        <span className="font-mono text-xs text-ink-mute px-1">
+          {pageLabel}
         </span>
 
         <Button
           size="sm"
           variant="ghost"
-          disabled={page >= totalPages}
+          disabled={total === 0 || page >= totalPages}
           onClick={() => onPageChange(page + 1)}
           aria-label="Next page"
         >
-          Next →
+          <ArrowRightIcon size={16} />
         </Button>
 
         <form onSubmit={handleJump} className="flex items-center gap-1 ml-2">
           <input
             type="number"
-            min={1}
-            max={totalPages}
+            min={totalPages > 0 ? 1 : 0}
+            max={totalPages > 0 ? totalPages : 0}
             value={jumpValue}
             onChange={(e) => setJumpValue(e.target.value)}
             placeholder="Go to"
             aria-label="Jump to page"
-            className={[
+            disabled={totalPages === 0}
+            className={cn(
               "w-16 text-xs font-mono py-1 px-2",
-              "bg-[var(--bg-raised)] border border-[var(--hair)] rounded-[var(--radius)]",
-              "text-[var(--ink)] placeholder:text-[var(--ink-mute)]",
-              "focus:outline-none focus:border-[var(--accent)]",
+              "bg-bg-raised border border-hair rounded-(--radius)",
+              "text-ink placeholder:text-ink-mute",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg focus:border-accent",
               "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-            ].join(" ")}
+              totalPages === 0 && "opacity-50 cursor-not-allowed",
+            )}
           />
-          <Button size="sm" variant="outline" type="submit">
+          <Button
+            size="sm"
+            variant="outline"
+            type="submit"
+            disabled={totalPages === 0}
+          >
             Go
           </Button>
         </form>

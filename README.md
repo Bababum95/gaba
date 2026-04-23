@@ -8,12 +8,12 @@
 
 ## Скриншоты
 
-| Light mode | Dark mode |
-|---|---|
+| Light mode                                                 | Dark mode                                                |
+| ---------------------------------------------------------- | -------------------------------------------------------- |
 | ![Dashboard Light](public/screenshots/dashboard-light.png) | ![Dashboard Dark](public/screenshots/dashboard-dark.png) |
 
-| Gallery view | User profile |
-|---|---|
+| Gallery view                               | User profile                               |
+| ------------------------------------------ | ------------------------------------------ |
 | ![Gallery](public/screenshots/gallery.png) | ![Profile](public/screenshots/profile.png) |
 
 ---
@@ -29,14 +29,14 @@ pnpm dev
 
 ### Все скрипты
 
-| Команда | Описание |
-|---|---|
-| `pnpm dev` | Dev-сервер с Turbopack |
-| `pnpm build` | Production-сборка |
-| `pnpm start` | Запуск production-сборки |
-| `pnpm lint` | ESLint |
-| `pnpm typecheck` | TypeScript strict check |
-| `pnpm test` | Vitest (unit-тесты) |
+| Команда          | Описание                 |
+| ---------------- | ------------------------ |
+| `pnpm dev`       | Dev-сервер с Turbopack   |
+| `pnpm build`     | Production-сборка        |
+| `pnpm start`     | Запуск production-сборки |
+| `pnpm lint`      | ESLint                   |
+| `pnpm typecheck` | TypeScript strict check  |
+| `pnpm test`      | Vitest (unit-тесты)      |
 
 ---
 
@@ -102,23 +102,18 @@ src/
   app/
     layout.tsx              # Fonts, providers, NuqsAdapter
     page.tsx                # Dashboard RSC
-    loading.tsx / error.tsx
+    loading.tsx
+    error.tsx
     users/[id]/
       page.tsx              # Profile RSC
-      loading.tsx / not-found.tsx
+      loading.tsx
+      not-found.tsx
   components/
     dashboard/              # DashboardShell, StatsStrip, Toolbar, FilterChips,
-                            # SortMenu, ViewToggle, UsersTable, UsersGrid,
-                            # UserRow, UserCard, Pagination, EmptyState
     profile/                # ProfileHeader, IdentityBlock, ContactBlock,
-                            # AddressBlock, CompanyBlock, FinanceBlock,
-                            # VitalsBlock, CryptoBlock, BackLink
     ui/                     # Button, Input, Select, Chip, Avatar,
-                            # Skeleton, Kbd, ThemeToggle
   hooks/                    # useUsersQuery, useUsersState, useStatsQuery,
-                            # useDebouncedValue
   lib/                      # api.ts, schema.ts, types.ts, endpoints.ts,
-                            # format.ts, stats.ts, constants.ts
   providers/                # QueryProvider, ThemeProvider
   styles/                   # tokens.css
   test/                     # endpoints.test.ts, stats.test.ts

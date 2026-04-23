@@ -8,6 +8,7 @@ export function formatWeight(kg: number): string {
 
 export function formatBirthDate(dateStr: string): string {
   const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return "—";
   return d.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

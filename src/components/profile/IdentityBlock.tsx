@@ -1,39 +1,44 @@
-import type { User } from "@/lib/types";
 import { formatBirthDate } from "@/lib/format";
+import type { User } from "@/lib/types";
 
-function Field({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div>
-      <dt className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink-mute)] mb-0.5">
-        {label}
-      </dt>
-      <dd className={`text-sm text-[var(--ink-soft)] ${mono ? "font-mono" : ""}`}>
-        {value}
-      </dd>
-    </div>
-  );
-}
+import { ProfileField } from "./ProfileField";
+import { ProfileSection } from "./ProfileSection";
 
-export default function IdentityBlock({ user }: { user: User }) {
+type Props = {
+  user: User;
+};
+
+export function IdentityBlock({ user }: Props) {
   return (
-    <section aria-labelledby="identity-heading">
-      <h2 id="identity-heading" className="font-display text-xl font-semibold text-[var(--ink)] mb-4">
-        Identity
-      </h2>
+    <ProfileSection title="Identity" headingId="identity-heading">
       <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4">
-        <Field label="Full name" value={`${user.firstName} ${user.lastName}`} />
-        {user.maidenName && <Field label="Maiden name" value={user.maidenName} />}
-        <Field label="Username" value={`@${user.username}`} mono />
-        <Field label="Gender" value={user.gender} />
-        <Field label="Birth date" value={formatBirthDate(user.birthDate)} />
-        <Field label="Age" value={`${user.age} years`} />
-        <Field label="University" value={user.university} />
-        <Field label="Blood group" value={user.bloodGroup} mono />
-        <Field label="Eye color" value={user.eyeColor} />
-        <Field label="Hair" value={`${user.hair.color}, ${user.hair.type}`} />
-        <Field label="Height" value={`${user.height} cm`} mono />
-        <Field label="Weight" value={`${user.weight} kg`} mono />
+        <ProfileField
+          label="Full name"
+          value={`${user.firstName} ${user.lastName}`}
+        />
+        {user.maidenName ? (
+          <ProfileField label="Maiden name" value={user.maidenName} />
+        ) : null}
+        <ProfileField label="Username" value={`@${user.username}`} mono />
+        <ProfileField label="Gender" value={user.gender} />
+        <ProfileField
+          label="Birth date"
+          value={formatBirthDate(user.birthDate)}
+        />
+        <ProfileField label="Age" value={`${user.age} years`} />
+        <ProfileField
+          label="University"
+          value={user.university ?? "—"}
+        />
+        <ProfileField label="Blood group" value={user.bloodGroup} mono />
+        <ProfileField label="Eye color" value={user.eyeColor} />
+        <ProfileField
+          label="Hair"
+          value={`${user.hair.color}, ${user.hair.type}`}
+        />
+        <ProfileField label="Height" value={`${user.height} cm`} mono />
+        <ProfileField label="Weight" value={`${user.weight} kg`} mono />
       </dl>
-    </section>
+    </ProfileSection>
   );
 }

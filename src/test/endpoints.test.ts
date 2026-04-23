@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { resolveEndpoint } from "@/lib/endpoints";
+import {
+  allUsersUrl,
+  resolveEndpoint,
+  userByIdUrl,
+} from "@/lib/endpoints";
 
 describe("resolveEndpoint", () => {
   const base = { limit: 15, skip: 0 };
@@ -15,6 +19,14 @@ describe("resolveEndpoint", () => {
     const url = resolveEndpoint({ ...base, q: "Emily" });
     expect(url).toContain("/users/search");
     expect(url).toContain("q=Emily");
+    expect(url).toContain("limit=15");
+    expect(url).toContain("skip=0");
+    expect(url).not.toContain("sortBy");
+  });
+
+  it("trims search query", () => {
+    const url = resolveEndpoint({ ...base, q: "  John  " });
+    expect(url).toContain("q=John");
   });
 
   it("returns filter URL when filterKey and filterValue are set", () => {
@@ -43,5 +55,17 @@ describe("resolveEndpoint", () => {
     const url = resolveEndpoint({ ...base, sortBy: "age", order: "desc" });
     expect(url).toContain("sortBy=age");
     expect(url).toContain("order=desc");
+  });
+});
+
+describe("userByIdUrl", () => {
+  it("builds user path", () => {
+    expect(userByIdUrl(42)).toBe("https://dummyjson.com/users/42");
+  });
+});
+
+describe("allUsersUrl", () => {
+  it("requests full list with limit=0", () => {
+    expect(allUsersUrl()).toBe("https://dummyjson.com/users?limit=0");
   });
 });

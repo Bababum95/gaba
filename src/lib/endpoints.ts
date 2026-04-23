@@ -13,11 +13,13 @@ export function resolveEndpoint(p: ListParams): string {
     pagination.set("order", p.order ?? "asc");
   }
 
-  // Search endpoint — text query takes priority
+  // Search endpoint — text query takes priority (DummyJSON /users/search ignores sortBy)
   if (p.q && p.q.trim()) {
-    const sp = new URLSearchParams({ q: p.q.trim() });
-    // search doesn't support sortBy natively, but we attach for completeness
-    pagination.forEach((v, k) => sp.set(k, v));
+    const sp = new URLSearchParams({
+      q: p.q.trim(),
+      limit: String(p.limit),
+      skip: String(p.skip),
+    });
     return `${base}/users/search?${sp.toString()}`;
   }
 

@@ -1,17 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
-import Input from "@/components/ui/Input";
-import ThemeToggle from "@/components/ui/ThemeToggle";
-import Kbd from "@/components/ui/Kbd";
-import FilterChips from "./FilterChips";
-import SortMenu from "./SortMenu";
-import ViewToggle from "./ViewToggle";
+import { SearchIcon } from "lucide-react";
+import { useCallback, useEffect, useRef, type ReactElement } from "react";
+
+import { Input } from "@/components/ui/Input";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Kbd } from "@/components/ui/Kbd";
 import type { FilterKey, SortKey, SortOrder, ViewMode } from "@/lib/types";
 
-type ToolbarProps = {
+import { FilterChips } from "./FilterChips";
+import { SortMenu } from "./SortMenu";
+import { ViewToggle } from "./ViewToggle";
+
+type Props = {
   q: string;
-  filterKey: string;
+  filterKey: FilterKey | "";
   filterValue: string;
   sortBy: SortKey;
   order: SortOrder;
@@ -24,7 +27,7 @@ type ToolbarProps = {
   onViewChange: (view: ViewMode) => void;
 };
 
-export default function Toolbar({
+export function Toolbar({
   q,
   filterKey,
   filterValue,
@@ -37,7 +40,7 @@ export default function Toolbar({
   onSortChange,
   onOrderChange,
   onViewChange,
-}: ToolbarProps) {
+}: Props): ReactElement {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const focusSearch = useCallback(() => {
@@ -47,8 +50,7 @@ export default function Toolbar({
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
-      const inInput =
-        tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      const inInput = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
 
       if ((e.key === "/" || (e.metaKey && e.key === "k")) && !inInput) {
         e.preventDefault();
@@ -60,10 +62,8 @@ export default function Toolbar({
   }, [focusSearch]);
 
   return (
-    <div className="border-b border-[var(--hair)] bg-[var(--bg)]">
-      <div className="max-w-screen-2xl mx-auto px-6 py-3 space-y-3">
-
-        {/* Row 1: search + controls */}
+    <div className="border-b border-hair bg-bg">
+      <div className="mx-auto px-6 py-3 space-y-3">
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex-1 min-w-[200px] max-w-sm">
             <Input
@@ -72,18 +72,13 @@ export default function Toolbar({
               placeholder="Search users…"
               value={q}
               onChange={(e) => onQChange(e.target.value)}
-              icon={
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              }
+              icon={<SearchIcon size={16} />}
               trailing={
                 q ? (
                   <button
                     type="button"
                     onClick={() => onQChange("")}
-                    className="text-[var(--ink-mute)] hover:text-[var(--ink)] text-base leading-none"
+                    className="text-ink-mute hover:text-ink text-base leading-none"
                     aria-label="Clear search"
                   >
                     ×
@@ -96,7 +91,7 @@ export default function Toolbar({
             />
           </div>
 
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2">
             <SortMenu
               sortBy={sortBy}
               order={order}
@@ -108,7 +103,6 @@ export default function Toolbar({
           </div>
         </div>
 
-        {/* Row 2: filter chips */}
         <FilterChips
           activeKey={filterKey}
           activeValue={filterValue}
@@ -116,7 +110,6 @@ export default function Toolbar({
           onChange={onFilterChange}
           onClear={onFilterClear}
         />
-
       </div>
     </div>
   );

@@ -1,4 +1,8 @@
-type ChipProps = {
+import { XIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+type Props = {
   label: string;
   active?: boolean;
   disabled?: boolean;
@@ -6,50 +10,55 @@ type ChipProps = {
   onClick?: () => void;
 };
 
-export default function Chip({
+export function Chip({
   label,
   active = false,
   disabled = false,
   onRemove,
   onClick,
-}: ChipProps) {
-  return (
-    <span
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      aria-pressed={active}
-      aria-disabled={disabled}
-      onClick={disabled ? undefined : onClick}
-      onKeyDown={(e) => {
-        if (!disabled && (e.key === "Enter" || e.key === " ")) onClick?.();
-      }}
-      className={[
-        "inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-[var(--radius-sm)]",
-        "border transition-all duration-150 select-none",
-        disabled
-          ? "opacity-40 cursor-not-allowed border-[var(--hair)] text-[var(--ink-mute)]"
-          : "cursor-pointer",
-        active && !disabled
-          ? "bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)]"
-          : !disabled
-            ? "bg-[var(--bg-raised)] text-[var(--ink-soft)] border-[var(--hair)] hover:border-[var(--hair-strong)]"
-            : "",
-      ].join(" ")}
-    >
-      {label}
-      {active && onRemove && !disabled && (
+}: Props) {
+  if (active && onRemove && !disabled) {
+    return (
+      <span className="inline-flex items-stretch rounded-sm overflow-hidden border border-accent bg-accent text-accent-ink">
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
-          className="ml-0.5 opacity-70 hover:opacity-100 leading-none"
+          onClick={onClick}
+          aria-pressed
+          className="px-2.5 py-1 text-xs font-medium hover:bg-accent-hover/20 transition-colors"
+        >
+          {label}
+        </button>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="px-2 text-xs font-medium border-l border-accent-ink/25 hover:bg-accent-hover/20 transition-colors leading-none"
           aria-label={`Remove filter ${label}`}
         >
-          ×
+          <XIcon size={14} />
         </button>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      aria-pressed={active}
+      onClick={disabled ? undefined : onClick}
+      className={cn(
+        "inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-sm",
+        "border transition-all duration-150 select-none",
+        disabled
+          ? "opacity-40 cursor-not-allowed border-hair text-ink-mute"
+          : "cursor-pointer",
+        active && !disabled
+          ? "bg-accent text-accent-ink border-accent"
+          : !disabled &&
+              "bg-bg-raised text-ink-soft border-hair hover:border-hair-strong",
       )}
-    </span>
+    >
+      {label}
+    </button>
   );
 }

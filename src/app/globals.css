@@ -21,7 +21,9 @@
   --color-ok-muted: var(--ok-muted);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -35,7 +37,9 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   line-height: 1.5;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* Focus visible ring */
@@ -69,8 +73,12 @@ body {
 
 /* Shimmer animation */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .shimmer {
